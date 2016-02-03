@@ -19,6 +19,10 @@ function matchExpressions(contents) {
   return contents.match(/<!--\s+include:([a-z]+)\(([^)]+)\)\s+-->/);
 }
 
+function excludeExpressions(contents) {
+  return contents.match(/<!--\s+exclude:([a-z]+)\(([^)]+)\)\s+-->/);
+}
+
 function replaceExtension(filename, type, options) {
 
   if( options.scriptExt && type === 'js' ) {
@@ -45,6 +49,7 @@ function injectFiles(file, options) {
   var contents = file.contents.toString();
   var cwd = options.cwd || path.dirname(file.path);
   var matches = matchExpressions(contents);
+  matches = matches - excludeExpressions(matches);  //through array substraction?
 
   while( matches ) {
 
